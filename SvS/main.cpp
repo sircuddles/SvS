@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "TextWriter.h"
 #include "ThingSpawner.h"
+#include "Cursor.h"
 
 int main()
 {
@@ -12,12 +13,14 @@ int main()
 
 	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "Something", 1);
 	gameWindow.setVerticalSyncEnabled(true);
+	gameWindow.setMouseCursorVisible(false);
 
 	sf::Clock gameClock;
 	sf::Event gameEvents;
 	float gameTime = 0;
 
 	ThingSpawner thing(gameWindow, columnCount, laneCount);
+	Cursor customCursor(gameWindow);
 
 	while (gameWindow.isOpen()) 
 	{
@@ -25,12 +28,16 @@ int main()
 		{
 			if ((gameEvents.key.code == sf::Keyboard::Escape) || (gameEvents.type == sf::Event::Closed))
 				gameWindow.close();
+			
 		}
 
 		thing.update(gameTime);
+		// Horrible update that sets the cursor to the mouse position
+		customCursor.update(sf::Vector2f(sf::Mouse::getPosition(gameWindow)));
 		
 		Board::GetInstance(gameWindow)->draw();
 		thing.draw();
+		customCursor.draw();
 
 		gameWindow.display();
 		gameWindow.clear(sf::Color::White);
