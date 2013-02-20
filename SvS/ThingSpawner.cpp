@@ -3,19 +3,22 @@
 #include <math.h>
 #include <iostream>
 
-ThingSpawner::ThingSpawner(int gridWidth, int gridHeight) {
+#include "Board.h"
+
+ThingSpawner::ThingSpawner(sf::RenderWindow& window, int columnCount, int laneCount) {
 	// Initialize timer variables
-	mSpawnTimerSeconds = 5;
+	mWindow = &window;
+	mSpawnTimerSeconds = 1;
 	mSpawnTimerCounter = 0;
 	mSpawnTimerText.setPosition(0, 700);
 	mSpawnTimerText.setString("");
 
 	// Seed number generator
-	std::srand(time(NULL));
+	std::srand((unsigned int)time(NULL));
 
 	// Set the values for the grid
-	mGridWidth = gridWidth;
-	mGridHeight = gridHeight;
+	mColumnCount = columnCount;
+	mLaneCount = laneCount;
 
 	// Set the values for Textures
 	mZombieTexture.loadFromFile("assets/enemy.png");
@@ -42,27 +45,39 @@ void ThingSpawner::update(float t) {
 	mSpawnTimerText.setString(ss.str());
 
 	// Run the updates of everything in the list
-	std::list<Entity* >::iterator iter;
-	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) {
-		(*iter)->update(t);
+	for (std::list<Entity* >::iterator iter = mEntityList.begin();  iter != mEntityList.end();) {
+		Entity *thing = *iter;
+		thing->update(t);
+		
+		// If the right side of the texture of the sprite is off the screen (to the left)
+		//  Delete sprite.
+		if(thing->getSprite().getGlobalBounds().left < Board::GetInstance(*mWindow)->getBoardRect().getGlobalBounds().left)
+		{
+			// 'Thing' is ready to be deleted.
+			//	 Delete thing...
+			iter = mEntityList.erase(iter);
+		}
+		else
+		{
+			iter++;
+		}
 	}
-
 }
 
-void ThingSpawner::draw(sf::RenderWindow& w) {
+void ThingSpawner::draw() {
 	// Draw timer text
-	mSpawnTimerText.draw(w);
+	mSpawnTimerText.draw(*mWindow);
 
 	// Draw all entities in the list
 	std::list<Entity* >::iterator iter;
 	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) {
-		w.draw((*iter)->getSprite());
+		mWindow->draw((*iter)->getSprite());
 	}
 }
 
 void ThingSpawner::spawn() {
 	// Generate a random number between 0 and the number of rows
-	int row = std::rand() % mGridHeight;
+	int row = std::rand() % mLaneCount;
 
 	// Create the new mob
 	// Mob types to be added later

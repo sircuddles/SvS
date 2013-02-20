@@ -7,15 +7,17 @@
 
 int main()
 {
+	const int laneCount = 5;
+	const int columnCount = 9;
+
 	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "Something", 1);
 	gameWindow.setVerticalSyncEnabled(true);
 
 	sf::Clock gameClock;
 	sf::Event gameEvents;
-	double gameTime = 0;
+	float gameTime = 0;
 
-	Board gameBoard(gameWindow);	
-	ThingSpawner thing(9, 5);
+	ThingSpawner thing(gameWindow, columnCount, laneCount);
 
 	while (gameWindow.isOpen()) 
 	{
@@ -27,8 +29,8 @@ int main()
 
 		thing.update(gameTime);
 		
-		gameBoard.draw(gameWindow);
-		thing.draw(gameWindow);
+		Board::GetInstance(gameWindow)->draw();
+		thing.draw();
 
 		gameWindow.display();
 		gameWindow.clear(sf::Color::White);

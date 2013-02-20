@@ -16,7 +16,7 @@ void TextWriter::draw(sf::RenderWindow& w) {
 	w.draw(mText);
 }
 
-void TextWriter::setPosition(int x, int y) {
+void TextWriter::setPosition(float x, float y) {
 	mText.setPosition(x, y);
 }
 

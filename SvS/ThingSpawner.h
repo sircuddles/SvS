@@ -14,21 +14,20 @@ class ThingSpawner
 {
 
 public:
-	ThingSpawner(int gridWidth, int gridHeight);	
+	ThingSpawner(sf::RenderWindow& window, int columnCount, int laneCount);	
 	~ThingSpawner();
 
-	void draw(sf::RenderWindow& w);
+	void draw();
 	void update(float t);
 	void spawn();
 
 private:
 	float mSpawnTimerSeconds;
 	float mSpawnTimerCounter;
-	int mGridWidth, mGridHeight;
+	int mColumnCount, mLaneCount;
 
 	std::list<Entity*> mEntityList;
 	TextWriter mSpawnTimerText;
 	sf::Texture mZombieTexture;
-
-
+	sf::RenderWindow* mWindow;
 };

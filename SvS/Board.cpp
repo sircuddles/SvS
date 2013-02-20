@@ -1,15 +1,16 @@
 #include "Board.h"
 
+Board* Board::mInstance = NULL;
 
-Board::Board(const sf::RenderWindow& gameWindow)
+Board::Board(sf::RenderWindow& gameWindow)
 {
-	
-
+	mInstance = this;
+	mGameWindow = &gameWindow;
 	mLeftBoardOffset = 125;
 
 	// Define the board outline rectangle
-	mBoardOutline.setSize(sf::Vector2f(gameWindow.getSize().x - mLeftBoardOffset, gameWindow.getSize().y));
-	mBoardOutline.setPosition(mLeftBoardOffset, 0);
+	mBoardOutline.setSize(sf::Vector2f((float)gameWindow.getSize().x - mLeftBoardOffset, (float)gameWindow.getSize().y));
+	mBoardOutline.setPosition((float)mLeftBoardOffset, 0);
 	mBoardOutline.setOutlineThickness(-5);
 	mBoardOutline.setOutlineColor(sf::Color::Black);
 	mBoardOutline.setFillColor(sf::Color::Transparent);
@@ -29,11 +30,11 @@ Board::Board(const sf::RenderWindow& gameWindow)
 }
 Board::~Board() {}
 
-void Board::draw(sf::RenderWindow& gameWindow) {
-	gameWindow.draw(mBoardOutline);
+void Board::draw() {
+	mGameWindow->draw(mBoardOutline);
 	for (int i = 0; i < GRID_HEIGHT; i++) {
 		for (int j = 0; j < GRID_WIDTH;  j++) {
-			gameWindow.draw(mBoardGrid[i][j]);
+			mGameWindow->draw(mBoardGrid[i][j]);
 		}
 	}
 }

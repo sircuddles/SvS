@@ -10,7 +10,7 @@ public:
 	~TextWriter(void);
 
 	void draw(sf::RenderWindow& w);
-	void setPosition(int x, int y);
+	void setPosition(float x, float y);
 	void setString(std::string text);
 
 private:
