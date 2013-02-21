@@ -14,13 +14,15 @@ int main()
 	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "SvS", 1);
 	gameWindow.setVerticalSyncEnabled(true);
 	gameWindow.setMouseCursorVisible(false);
+	Board board = Board();
+	board.initialize(&gameWindow);
 
 	sf::Clock gameClock;
 	sf::Event gameEvents;
 	float gameTime = 0;
 
-	ThingSpawner thing(gameWindow, COLUMN_COUNT, LANE_COUNT);
-	Cursor customCursor(gameWindow);
+	ThingSpawner thing(&board, COLUMN_COUNT, LANE_COUNT);
+	Cursor customCursor(&gameWindow);
 
 	while (gameWindow.isOpen()) 
 	{
@@ -35,7 +37,7 @@ int main()
 			{
 				for(int i = 0; i < Board::MAX_PLANTS; i++)
 				{
-					if(Board::GetInstance(gameWindow)->getPlantItems()[i].getGlobalBounds().contains(gameEvents.mouseButton.x, gameEvents.mouseButton.y))
+					if(board.getPlantItems()[i].getGlobalBounds().contains((float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y))
 					{
 						//getPlantItems()[i]
 					}
@@ -47,7 +49,7 @@ int main()
 		// Horrible update that sets the cursor to the mouse position
 		customCursor.update(sf::Vector2f(sf::Mouse::getPosition(gameWindow)));
 		
-		Board::GetInstance(gameWindow)->draw();
+		board.draw();
 		thing.draw();
 		customCursor.draw();
 

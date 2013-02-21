@@ -1,7 +1,14 @@
 #include "TextWriter.h"
 
 
-TextWriter::TextWriter(void) {
+TextWriter::TextWriter() {}
+
+TextWriter::~TextWriter(void) {}
+
+void TextWriter::initialize(Board *board)
+{
+	mBoard = board;
+
 	mFont.loadFromFile("assets/font.ttf");
 	mText.setFont(mFont);
 
@@ -10,10 +17,9 @@ TextWriter::TextWriter(void) {
 	mText.setColor(sf::Color::Black);
 	mText.setString("");
 }
-TextWriter::~TextWriter(void) {}
 
-void TextWriter::draw(sf::RenderWindow& w) {
-	w.draw(mText);
+void TextWriter::draw() {
+	mBoard->getGameWindow()->draw(mText);
 }
 
 void TextWriter::setPosition(float x, float y) {

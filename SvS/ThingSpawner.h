@@ -1,8 +1,11 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+
+#include <list>
+
 #include "TextWriter.h"
 #include "Entity.h"
-#include <list>
+#include "Board.h"
 
 /*
 1)  Countdown from SPAWN_INTERVAL_SECONDS to 0
@@ -14,7 +17,7 @@ class ThingSpawner
 {
 
 public:
-	ThingSpawner(sf::RenderWindow& window, int columnCount, int laneCount);	
+	ThingSpawner(Board *board, int columnCount, int laneCount);	
 	~ThingSpawner();
 
 	void draw();
@@ -22,6 +25,7 @@ public:
 	void spawn();
 
 private:
+	Board *mBoard;
 	float mSpawnTimerSeconds;
 	float mSpawnTimerCounter;
 	int mColumnCount, mLaneCount;
@@ -29,5 +33,4 @@ private:
 	std::list<Entity*> mEntityList;
 	TextWriter mSpawnTimerText;
 	sf::Texture mZombieTexture;
-	sf::RenderWindow* mWindow;
 };

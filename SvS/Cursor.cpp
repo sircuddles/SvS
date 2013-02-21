@@ -1,8 +1,8 @@
 #include "Cursor.h"
 
 
-Cursor::Cursor(sf::RenderWindow& window) {
-	mWindow = &window;
+Cursor::Cursor(sf::RenderWindow* window) {
+	mWindow = window;
 
 	// Load and assign the texture to the sprite
 	texture.loadFromFile("assets/cursor.png");

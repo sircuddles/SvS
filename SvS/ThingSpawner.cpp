@@ -5,11 +5,13 @@
 
 #include "Board.h"
 
-ThingSpawner::ThingSpawner(sf::RenderWindow& window, int columnCount, int laneCount) {
+ThingSpawner::ThingSpawner(Board *board, int columnCount, int laneCount) {
+	mBoard = board;
 	// Initialize timer variables
-	mWindow = &window;
 	mSpawnTimerSeconds = 1;
 	mSpawnTimerCounter = 0;
+
+	mSpawnTimerText.initialize(board);
 	mSpawnTimerText.setPosition(0, 700);
 	mSpawnTimerText.setString("");
 
@@ -51,7 +53,7 @@ void ThingSpawner::update(float t) {
 		
 		// If the right side of the texture of the sprite is off the screen (to the left)
 		//  Delete sprite.
-		if(thing->getSprite().getGlobalBounds().left < Board::GetInstance(*mWindow)->getBoardRect().getGlobalBounds().left)
+		if(thing->getSprite().getGlobalBounds().left < mBoard->getBoardRect().getGlobalBounds().left)
 		{
 			// 'Thing' is ready to be deleted.
 			//	 Delete thing...
@@ -66,12 +68,12 @@ void ThingSpawner::update(float t) {
 
 void ThingSpawner::draw() {
 	// Draw timer text
-	mSpawnTimerText.draw(*mWindow);
+	mSpawnTimerText.draw();
 
 	// Draw all entities in the list
 	std::list<Entity* >::iterator iter;
 	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) {
-		mWindow->draw((*iter)->getSprite());
+		mBoard->getGameWindow()->draw((*iter)->getSprite());
 	}
 }
 

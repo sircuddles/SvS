@@ -15,6 +15,7 @@
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlantItem.cpp" />
     <ClCompile Include="TextWriter.cpp" />
     <ClCompile Include="ThingSpawner.cpp" />
   </ItemGroup>
@@ -22,6 +23,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="PlantItem.h" />
     <ClInclude Include="TextWriter.h" />
     <ClInclude Include="ThingSpawner.h" />
   </ItemGroup>

@@ -8,7 +8,7 @@ private:
 	sf::RenderWindow* mWindow;
 
 public:
-	Cursor(sf::RenderWindow& window);
+	Cursor(sf::RenderWindow* window);
 	~Cursor(void);
 
 	void update(sf::Vector2f position);

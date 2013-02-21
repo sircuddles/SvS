@@ -2,14 +2,17 @@
 
 Board* Board::mInstance = NULL;
 
-Board::Board(sf::RenderWindow& gameWindow)
+Board::Board()
 {
-	mInstance = this;
-	mGameWindow = &gameWindow;
+}
+
+void Board::initialize(sf::RenderWindow *gameWindow)
+{
+	mGameWindow = gameWindow;
 	mLeftBoardOffset = 125;
 
 	// Define the board outline rectangle
-	mBoardOutline.setSize(sf::Vector2f((float)gameWindow.getSize().x - mLeftBoardOffset, (float)gameWindow.getSize().y));
+	mBoardOutline.setSize(sf::Vector2f((float)gameWindow->getSize().x - mLeftBoardOffset, (float)gameWindow->getSize().y));
 	mBoardOutline.setPosition((float)mLeftBoardOffset, 0);
 	mBoardOutline.setOutlineThickness(-5);
 	mBoardOutline.setOutlineColor(sf::Color::Black);
