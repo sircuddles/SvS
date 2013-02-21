@@ -34,11 +34,14 @@ Board::Board(sf::RenderWindow& gameWindow)
 		mPlantGrid[i].setFillColor(sf::Color::Transparent);
 		mPlantGrid[i].setOutlineThickness(-2);
 		mPlantGrid[i].setSize(sf::Vector2f(tileWidth, tileHeight));
-		mPlantGrid[i].setPosition(PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
+		mPlantGrid[i].setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
 	}
 }
 
-Board::~Board() {}
+Board::~Board() 
+{
+
+}
 
 void Board::draw() {
 	mGameWindow->draw(mBoardOutline);

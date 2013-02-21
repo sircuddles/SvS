@@ -30,6 +30,17 @@ int main()
 			{
 				gameWindow.close();
 			}
+
+			if(gameEvents.type == sf::Event::MouseButtonPressed && gameEvents.mouseButton.button == sf::Mouse::Button::Left)
+			{
+				for(int i = 0; i < Board::MAX_PLANTS; i++)
+				{
+					if(Board::GetInstance(gameWindow)->getPlantItems()[i].getGlobalBounds().contains(gameEvents.mouseButton.x, gameEvents.mouseButton.y))
+					{
+						//getPlantItems()[i]
+					}
+				}
+			}
 		}
 
 		thing.update(gameTime);

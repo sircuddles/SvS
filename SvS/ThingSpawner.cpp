@@ -81,7 +81,8 @@ void ThingSpawner::spawn() {
 
 	// Create the new mob
 	// Mob types to be added later
-	Entity *newZombie = new Entity(&mZombieTexture);
+	Entity *newZombie = new Entity();
+	newZombie->setTexture(&mZombieTexture);
 
 	// Set the position to the far right of the screen,  with the
 	// mob sprite aligned with the bottom of the row
