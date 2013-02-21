@@ -33,11 +33,11 @@ void Board::initialize(sf::RenderWindow *gameWindow)
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mPlantGrid[i].setOutlineColor(sf::Color::Green);
-		mPlantGrid[i].setFillColor(sf::Color::Transparent);
-		mPlantGrid[i].setOutlineThickness(-2);
-		mPlantGrid[i].setSize(sf::Vector2f(tileWidth, tileHeight));
-		mPlantGrid[i].setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
+		mPlantGrid[i].getPlantRectangle()->setOutlineColor(sf::Color::Green);
+		mPlantGrid[i].getPlantRectangle()->setFillColor(sf::Color::Transparent);
+		mPlantGrid[i].getPlantRectangle()->setOutlineThickness(-2);
+		mPlantGrid[i].getPlantRectangle()->setSize(sf::Vector2f(tileWidth, tileHeight));
+		mPlantGrid[i].getPlantRectangle()->setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
 	}
 }
 
@@ -56,6 +56,6 @@ void Board::draw() {
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mGameWindow->draw(mPlantGrid[i]);
+		mGameWindow->draw(*mPlantGrid[i].getPlantRectangle());
 	}
 }

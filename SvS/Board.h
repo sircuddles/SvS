@@ -1,11 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include "PlantItem.h"
 
 class Board
 {
 public:
 	static const int MAX_PLANTS = 3;
+
 	Board();	
 	~Board();
 	
@@ -14,7 +15,8 @@ public:
 
 	inline sf::RenderWindow* getGameWindow() { return mGameWindow; }
 	sf::RectangleShape getBoardRect() { return mBoardOutline; }
-	sf::RectangleShape* getPlantItems() { return mPlantGrid; }
+	//sf::RectangleShape* getPlantItems() { return mPlantGrid; }
+	PlantItem* getPlantItems() { return mPlantGrid; }
 
 private:
 	static Board* mInstance;
@@ -26,11 +28,10 @@ private:
 	// Plants
 	static const int PLANT_OFFSET_POSITION = 15;
 
-	
 	sf::RenderWindow* mGameWindow;
 	sf::RectangleShape mBoardGrid[GRID_HEIGHT][GRID_WIDTH];
-	//PlantItem* mPlantGrid[MAX_PLANTS];
-	sf::RectangleShape mPlantGrid[MAX_PLANTS];
+	PlantItem mPlantGrid[MAX_PLANTS];
+	//sf::RectangleShape mPlantGrid[MAX_PLANTS];
 	sf::RectangleShape mBoardOutline;
 	int mLeftBoardOffset;
 	sf::Vector2i mPosition;

@@ -14,6 +14,7 @@ int main()
 	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "SvS", 1);
 	gameWindow.setVerticalSyncEnabled(true);
 	gameWindow.setMouseCursorVisible(false);
+
 	Board board = Board();
 	board.initialize(&gameWindow);
 
@@ -37,9 +38,9 @@ int main()
 			{
 				for(int i = 0; i < Board::MAX_PLANTS; i++)
 				{
-					if(board.getPlantItems()[i].getGlobalBounds().contains((float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y))
+					if(board.getPlantItems()[i].getPlantRectangle()->getGlobalBounds().contains((float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y))
 					{
-						//getPlantItems()[i]
+						printf("Hit detected on plant item at %.2f(x) and %.2f(y)!\n", (float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y);
 					}
 				}
 			}
