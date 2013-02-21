@@ -5,6 +5,7 @@
 #include "TextWriter.h"
 #include "ThingSpawner.h"
 #include "Cursor.h"
+#include "ShooterPlant.h"
 
 int main()
 {
@@ -16,16 +17,17 @@ int main()
 	gameWindow.setMouseCursorVisible(false);
 
 	// Create board.
-	Board board = Board();
+	Board board;
 
 	// Create plant items available to user.
-	PlantItem plantItem1, plantItem2, plantItem3;
-	PlantItem plantItems[] = {plantItem1, plantItem2, plantItem3};
-	// Add plant items to board.
-	board.setPlantItems(plantItems);
+	ShooterPlant plantItem1, plantItem2, plantItem3;
+	plantItem1.setWindow(&gameWindow);
+	plantItem2.setWindow(&gameWindow);
+	plantItem3.setWindow(&gameWindow);
+	ShooterPlant* plantItems[] = {&plantItem1, &plantItem2, &plantItem3};
 
 	// Initialize board with main grid and plant items.
-	board.initialize(&gameWindow);
+	board.initialize(&gameWindow, (PlantItem**)plantItems);
 
 	sf::Clock gameClock;
 	sf::Event gameEvents;
@@ -33,6 +35,9 @@ int main()
 
 	ThingSpawner thing(&board, COLUMN_COUNT, LANE_COUNT);
 	Cursor customCursor(&gameWindow);
+
+	PlantItem* activePlantItem = NULL;
+	sf::RectangleShape* activeBoardCell = NULL;
 
 	while (gameWindow.isOpen()) 
 	{
@@ -45,12 +50,27 @@ int main()
 
 			if(gameEvents.type == sf::Event::MouseButtonPressed && gameEvents.mouseButton.button == sf::Mouse::Button::Left)
 			{
+				float x = (float)gameEvents.mouseButton.x;
+				float y = (float)gameEvents.mouseButton.y;
 				for(int i = 0; i < Board::MAX_PLANTS; i++)
 				{
-					if(board.getPlantItems()[i].getPlantRectangle()->getGlobalBounds().contains((float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y))
+					if((*board.getPlantItems()[i]).getPlantRectangle()->getGlobalBounds().contains(x,y))
 					{
+						PlantItem* sourcePlantItem = board.getPlantItems()[i];
+						for(int i = 0; i < Board::MAX_PLANTS; i++)
+						{
+							(*board.getPlantItems()[i]).deactivate();
+						}
+
+						sourcePlantItem->activate();
+						activePlantItem = sourcePlantItem;
 						printf("Hit detected on plant item at %.2f(x) and %.2f(y)!\n", (float)gameEvents.mouseButton.x, (float)gameEvents.mouseButton.y);
 					}
+				}
+
+				if(activePlantItem != NULL && (activeBoardCell = board.getMouseCollision(x,y)) != NULL)
+				{
+					board.addPlacedPlantItem(activePlantItem->getPlantType(), activeBoardCell);
 				}
 			}
 		}

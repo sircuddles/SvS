@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <list>
 #include "PlantItem.h"
+#include "ShooterPlant.h"
 
 class Board
 {
@@ -10,13 +12,15 @@ public:
 	Board();	
 	~Board();
 	
-	void initialize(sf::RenderWindow* gameWindow);
+	void initialize(sf::RenderWindow* gameWindow, PlantItem** plants);
 	void draw();
 
 	inline sf::RenderWindow* getGameWindow() { return mGameWindow; }
 	sf::RectangleShape getBoardRect() { return mBoardOutline; }
-	PlantItem* getPlantItems() { return mPlantItems; }
-	void setPlantItems(PlantItem* plantItems) { mPlantItems = plantItems; }
+	PlantItem** getPlantItems() { return mPlantItems; }
+
+	sf::RectangleShape* getMouseCollision(float x, float y);
+	void addPlacedPlantItem(PlantItem::PLANT_TYPE plantType, sf::RectangleShape* boardCell);
 
 private:
 	static Board* mInstance;
@@ -30,8 +34,9 @@ private:
 
 	sf::RenderWindow* mGameWindow;
 	sf::RectangleShape mBoardGrid[GRID_HEIGHT][GRID_WIDTH];
-	PlantItem* mPlantItems;
+	PlantItem** mPlantItems;
 	sf::RectangleShape mBoardOutline;
 	int mLeftBoardOffset;
 	sf::Vector2i mPosition;
+	std::list<PlantItem*> mPlacedPlantItems;
 };

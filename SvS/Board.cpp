@@ -6,9 +6,10 @@ Board::Board()
 {
 }
 
-void Board::initialize(sf::RenderWindow *gameWindow)
+void Board::initialize(sf::RenderWindow *gameWindow, PlantItem** plants)
 {
 	mGameWindow = gameWindow;
+	mPlantItems = plants;
 	mLeftBoardOffset = 125;
 
 	// Define the board outline rectangle
@@ -33,11 +34,11 @@ void Board::initialize(sf::RenderWindow *gameWindow)
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mPlantItems[i].getPlantRectangle()->setOutlineColor(sf::Color::Green);
-		mPlantItems[i].getPlantRectangle()->setFillColor(sf::Color::Transparent);
-		mPlantItems[i].getPlantRectangle()->setOutlineThickness(-2);
-		mPlantItems[i].getPlantRectangle()->setSize(sf::Vector2f(tileWidth, tileHeight));
-		mPlantItems[i].getPlantRectangle()->setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
+		(*plants[i]).getPlantRectangle()->setOutlineColor(sf::Color::Green);
+		(*plants[i]).getPlantRectangle()->setFillColor(sf::Color::Transparent);
+		(*plants[i]).getPlantRectangle()->setOutlineThickness(-2);
+		(*plants[i]).getPlantRectangle()->setSize(sf::Vector2f(tileWidth, tileHeight));
+		(*plants[i]).getPlantRectangle()->setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
 	}
 }
 
@@ -56,6 +57,40 @@ void Board::draw() {
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mGameWindow->draw(*mPlantItems[i].getPlantRectangle());
+		mGameWindow->draw(*(*mPlantItems[i]).getPlantRectangle());
+	}
+
+	for (std::list<PlantItem*>::iterator iter = mPlacedPlantItems.begin();  iter != mPlacedPlantItems.end();  iter++) 
+	{
+		mGameWindow->draw(*(*iter)->getSprite());
+	}
+}
+
+sf::RectangleShape* Board::getMouseCollision(float x, float y)
+{
+	for (int i = 0; i < GRID_HEIGHT; i++) {
+		for (int j = 0; j < GRID_WIDTH;  j++) {
+			if(mBoardGrid[i][j].getGlobalBounds().contains(x, y))
+			{
+				return &mBoardGrid[i][j];
+			}
+		}
+	}
+
+	return NULL;
+}
+
+void Board::addPlacedPlantItem(PlantItem::PLANT_TYPE plantType, sf::RectangleShape* boardCell)
+{
+	switch(plantType)
+	{
+		case PlantItem::PLANT_TYPE::Shooter:
+			printf("Shooter wants to be placed!\n");
+			
+			ShooterPlant* plantItem = new ShooterPlant();
+			mPlacedPlantItems.push_back(plantItem);
+
+			plantItem->getSprite()->setPosition(boardCell->getGlobalBounds().left, boardCell->getGlobalBounds().top);
+			break;			
 	}
 }
