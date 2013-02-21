@@ -27,7 +27,17 @@ Board::Board(sf::RenderWindow& gameWindow)
 			mBoardGrid[i][j].setPosition((j * tileWidth) + mLeftBoardOffset, i* tileHeight);
 		}
 	}
+
+	for(int i = 0; i < MAX_PLANTS; i++)
+	{
+		mPlantGrid[i].setOutlineColor(sf::Color::Green);
+		mPlantGrid[i].setFillColor(sf::Color::Transparent);
+		mPlantGrid[i].setOutlineThickness(-2);
+		mPlantGrid[i].setSize(sf::Vector2f(tileWidth, tileHeight));
+		mPlantGrid[i].setPosition(PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
+	}
 }
+
 Board::~Board() {}
 
 void Board::draw() {
@@ -36,5 +46,10 @@ void Board::draw() {
 		for (int j = 0; j < GRID_WIDTH;  j++) {
 			mGameWindow->draw(mBoardGrid[i][j]);
 		}
+	}
+
+	for(int i = 0; i < MAX_PLANTS; i++)
+	{
+		mGameWindow->draw(mPlantGrid[i]);
 	}
 }

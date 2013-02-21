@@ -8,10 +8,10 @@
 
 int main()
 {
-	const int laneCount = 5;
-	const int columnCount = 9;
+	const int LANE_COUNT = 5;
+	const int COLUMN_COUNT = 9;
 
-	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "Something", 1);
+	sf::RenderWindow gameWindow(sf::VideoMode(1024, 768), "SvS", 1);
 	gameWindow.setVerticalSyncEnabled(true);
 	gameWindow.setMouseCursorVisible(false);
 
@@ -19,16 +19,17 @@ int main()
 	sf::Event gameEvents;
 	float gameTime = 0;
 
-	ThingSpawner thing(gameWindow, columnCount, laneCount);
+	ThingSpawner thing(gameWindow, COLUMN_COUNT, LANE_COUNT);
 	Cursor customCursor(gameWindow);
 
 	while (gameWindow.isOpen()) 
 	{
 		while (gameWindow.pollEvent(gameEvents)) 
 		{
-			if ((gameEvents.key.code == sf::Keyboard::Escape) || (gameEvents.type == sf::Event::Closed))
+			if ((gameEvents.type == sf::Event::KeyPressed && gameEvents.key.code == sf::Keyboard::Escape) || (gameEvents.type == sf::Event::Closed))
+			{
 				gameWindow.close();
-			
+			}
 		}
 
 		thing.update(gameTime);
@@ -46,8 +47,6 @@ int main()
 		sf::sleep(sf::milliseconds(10));
 
 	} // End window is open
-		
-
 
 	return 0;
 }

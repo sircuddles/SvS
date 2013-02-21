@@ -16,7 +16,5 @@ public:
 private:
 	sf::Font mFont;
 	sf::Text mText;
-
-
 };
 
