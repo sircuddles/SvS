@@ -15,8 +15,8 @@ public:
 
 	inline sf::RenderWindow* getGameWindow() { return mGameWindow; }
 	sf::RectangleShape getBoardRect() { return mBoardOutline; }
-	//sf::RectangleShape* getPlantItems() { return mPlantGrid; }
-	PlantItem* getPlantItems() { return mPlantGrid; }
+	PlantItem* getPlantItems() { return mPlantItems; }
+	void setPlantItems(PlantItem* plantItems) { mPlantItems = plantItems; }
 
 private:
 	static Board* mInstance;
@@ -30,8 +30,7 @@ private:
 
 	sf::RenderWindow* mGameWindow;
 	sf::RectangleShape mBoardGrid[GRID_HEIGHT][GRID_WIDTH];
-	PlantItem mPlantGrid[MAX_PLANTS];
-	//sf::RectangleShape mPlantGrid[MAX_PLANTS];
+	PlantItem* mPlantItems;
 	sf::RectangleShape mBoardOutline;
 	int mLeftBoardOffset;
 	sf::Vector2i mPosition;

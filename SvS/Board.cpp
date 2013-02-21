@@ -33,11 +33,11 @@ void Board::initialize(sf::RenderWindow *gameWindow)
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mPlantGrid[i].getPlantRectangle()->setOutlineColor(sf::Color::Green);
-		mPlantGrid[i].getPlantRectangle()->setFillColor(sf::Color::Transparent);
-		mPlantGrid[i].getPlantRectangle()->setOutlineThickness(-2);
-		mPlantGrid[i].getPlantRectangle()->setSize(sf::Vector2f(tileWidth, tileHeight));
-		mPlantGrid[i].getPlantRectangle()->setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
+		mPlantItems[i].getPlantRectangle()->setOutlineColor(sf::Color::Green);
+		mPlantItems[i].getPlantRectangle()->setFillColor(sf::Color::Transparent);
+		mPlantItems[i].getPlantRectangle()->setOutlineThickness(-2);
+		mPlantItems[i].getPlantRectangle()->setSize(sf::Vector2f(tileWidth, tileHeight));
+		mPlantItems[i].getPlantRectangle()->setPosition((float)PLANT_OFFSET_POSITION, (tileHeight) + (i * tileHeight));
 	}
 }
 
@@ -56,6 +56,6 @@ void Board::draw() {
 
 	for(int i = 0; i < MAX_PLANTS; i++)
 	{
-		mGameWindow->draw(*mPlantGrid[i].getPlantRectangle());
+		mGameWindow->draw(*mPlantItems[i].getPlantRectangle());
 	}
 }

@@ -15,7 +15,16 @@ int main()
 	gameWindow.setVerticalSyncEnabled(true);
 	gameWindow.setMouseCursorVisible(false);
 
+	// Create board.
 	Board board = Board();
+
+	// Create plant items available to user.
+	PlantItem plantItem1, plantItem2, plantItem3;
+	PlantItem plantItems[] = {plantItem1, plantItem2, plantItem3};
+	// Add plant items to board.
+	board.setPlantItems(plantItems);
+
+	// Initialize board with main grid and plant items.
 	board.initialize(&gameWindow);
 
 	sf::Clock gameClock;
