@@ -18,10 +18,9 @@ public:
 
 	inline void setSprite(sf::Sprite sprite) { mSprite = sprite; }
 	inline sf::Sprite* getSprite() { return &mSprite; }
-	inline void setWindow(sf::RenderWindow *window) { mWindow = window; }
 
-	virtual void update(float t) = 0;
-	virtual void draw() = 0;
+	virtual void update(float t) {}
+	virtual void draw(sf::RenderWindow &window) {}
 
 	void activate();
 	void deactivate();
@@ -35,5 +34,4 @@ protected:
 	sf::Sprite mSprite;
 	sf::Texture mTexture;
 	PLANT_TYPE mPlantType;
-	sf::RenderWindow* mWindow;
 };

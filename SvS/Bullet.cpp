@@ -3,7 +3,7 @@
 Bullet::Bullet()
 {
 	mXVel = 100;
-	mTexture.loadFromFile("assets/plant1.png");
+	mTexture.loadFromFile("assets/plantBullet.png");
 	mSprite.setTexture(mTexture);
 }
 
@@ -13,5 +13,5 @@ void Bullet::update(float t)
 }
 
 void Bullet::setPosition(sf::Vector2f position) {
-	mSprite.setPosition(mSprite.getGlobalBounds().width + 10, (mSprite.getGlobalBounds().top + mSprite.getGlobalBounds().height) / 2);
+	mSprite.setPosition(position.x + mSprite.getGlobalBounds().width + 10, position.y + (mSprite.getGlobalBounds().top + mSprite.getGlobalBounds().height) / 2);
 }

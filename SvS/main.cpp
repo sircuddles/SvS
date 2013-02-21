@@ -20,11 +20,9 @@ int main()
 	Board board;
 
 	// Create plant items available to user.
-	ShooterPlant plantItem1, plantItem2, plantItem3;
-	plantItem1.setWindow(&gameWindow);
-	plantItem2.setWindow(&gameWindow);
-	plantItem3.setWindow(&gameWindow);
-	ShooterPlant* plantItems[] = {&plantItem1, &plantItem2, &plantItem3};
+	ShooterPlant shooterPlant1;
+	PlantItem plantItem1, plantItem2;
+	PlantItem* plantItems[] = {&shooterPlant1, &plantItem1, &plantItem2};
 
 	// Initialize board with main grid and plant items.
 	board.initialize(&gameWindow, (PlantItem**)plantItems);
@@ -37,7 +35,7 @@ int main()
 	Cursor customCursor(&gameWindow);
 
 	PlantItem* activePlantItem = NULL;
-	sf::RectangleShape* activeBoardCell = NULL;
+	sf::RectangleShape* boardCell = NULL;
 
 	while (gameWindow.isOpen()) 
 	{
@@ -68,9 +66,13 @@ int main()
 					}
 				}
 
-				if(activePlantItem != NULL && (activeBoardCell = board.getMouseCollision(x,y)) != NULL)
+				if(activePlantItem != NULL && (boardCell = board.getMouseCollision(x,y)) != NULL)
 				{
-					board.addPlacedPlantItem(activePlantItem->getPlantType(), activeBoardCell);
+					if(!board.isCellActive(boardCell))
+					{
+						board.setCellActive(boardCell);
+						board.addPlacedPlantItem(activePlantItem->getPlantType(), boardCell);
+					}
 				}
 			}
 		}
@@ -78,6 +80,7 @@ int main()
 		thing.update(gameTime);
 		// Horrible update that sets the cursor to the mouse position
 		customCursor.update(sf::Vector2f(sf::Mouse::getPosition(gameWindow)));
+		board.update(gameTime);
 		
 		board.draw();
 		thing.draw();

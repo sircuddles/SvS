@@ -12,7 +12,7 @@ public:
 	~ShooterPlant() { }
 
 	void update(float t);
-	void draw();
+	void draw(sf::RenderWindow &window);
 	std::list<Bullet*> getBulletList() { return mBulletList; }
 
 private:

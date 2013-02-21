@@ -4,6 +4,13 @@ Board* Board::mInstance = NULL;
 
 Board::Board()
 {
+	for (int i = 0; i < GRID_HEIGHT; i++) 
+	{
+		for (int j = 0; j < GRID_WIDTH;  j++) 
+		{
+			mBoardCells[i][j] = 0;
+		}
+	}
 }
 
 void Board::initialize(sf::RenderWindow *gameWindow, PlantItem** plants)
@@ -47,6 +54,15 @@ Board::~Board()
 
 }
 
+void Board::update(float t)
+{
+	// Update placed plants.
+	for (std::list<PlantItem*>::iterator iter = mPlacedPlantItems.begin();  iter != mPlacedPlantItems.end();  iter++) 
+	{
+		(*iter)->update(t);
+	}
+}
+
 void Board::draw() {
 	mGameWindow->draw(mBoardOutline);
 	for (int i = 0; i < GRID_HEIGHT; i++) {
@@ -62,7 +78,7 @@ void Board::draw() {
 
 	for (std::list<PlantItem*>::iterator iter = mPlacedPlantItems.begin();  iter != mPlacedPlantItems.end();  iter++) 
 	{
-		mGameWindow->draw(*(*iter)->getSprite());
+		(*iter)->draw(*mGameWindow);
 	}
 }
 
@@ -93,4 +109,34 @@ void Board::addPlacedPlantItem(PlantItem::PLANT_TYPE plantType, sf::RectangleSha
 			plantItem->getSprite()->setPosition(boardCell->getGlobalBounds().left, boardCell->getGlobalBounds().top);
 			break;			
 	}
+}
+
+void Board::setCellActive(sf::RectangleShape* cell)
+{
+	for (int i = 0; i < GRID_HEIGHT; i++) 
+	{
+		for (int j = 0; j < GRID_WIDTH;  j++) 
+		{
+			if(&(mBoardGrid[i][j]) == &(*(cell)))
+			{
+				mBoardCells[i][j] = 1;
+			}
+		}
+	}
+}
+
+bool Board::isCellActive(sf::RectangleShape* cell)
+{
+	for (int i = 0; i < GRID_HEIGHT; i++) 
+	{
+		for (int j = 0; j < GRID_WIDTH;  j++) 
+		{
+			if(&(mBoardGrid[i][j]) == &(*(cell)) && mBoardCells[i][j] == 1)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
