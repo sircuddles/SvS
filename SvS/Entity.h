@@ -4,12 +4,12 @@
 class Entity {
 private:
 	sf::Sprite mSprite;
-
 public:
-	Entity(sf::Texture* texture);
+	Entity();
 	virtual ~Entity(void);
 
 	virtual void update(float t);
 
+	inline void setTexture(sf::Texture* texture) { mSprite.setTexture(*texture); }
 	sf::Sprite& getSprite() { return mSprite; }
 };

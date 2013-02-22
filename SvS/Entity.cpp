@@ -1,10 +1,6 @@
 #include "Entity.h"
 
-
-Entity::Entity(sf::Texture* texture) {
-	mSprite.setTexture(*texture);
-}
-
+Entity::Entity() {}
 Entity::~Entity(void) {}
 
 void Entity::update(float t) {
