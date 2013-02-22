@@ -3,8 +3,8 @@
 EnergyPlant::EnergyPlant()
 {
 	mEnergyTimerCounter = 0;
-	mEnergyGainDelay = 5;
-	mEnergyPlusAmount = 25;
+	mEnergyGainDelay = 8;
+	mEnergyPlusAmount = 10;
 	
 	mPlantType = PLANT_TYPE::Energy;
 	mTexture.loadFromFile("assets/plant2.png");

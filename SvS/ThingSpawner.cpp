@@ -9,10 +9,11 @@ ThingSpawner::ThingSpawner(sf::RenderWindow *window, int columnCount, int laneCo
 	mWindow = window;
 	mEntityList.clear();
 	// Initialize timer variables
-	mSpawnTimerSeconds = 10;
+	mSpawnTimerSeconds = 15;
 	mSpawnTimerCounter = 0;
 	mLastDifficultyTimer = 0;
 	mGlobalTimerCounter = 0;
+	mSpawnNumber = 1;
 
 	// Seed number generator
 	std::srand((unsigned int)time(NULL));
@@ -31,6 +32,7 @@ ThingSpawner::~ThingSpawner() {
 }
 
 void ThingSpawner::update(float t) {
+	static bool isFlip = false;
 	mSpawnTimerCounter += t;
 	mGlobalTimerCounter += t;
 
@@ -41,9 +43,22 @@ void ThingSpawner::update(float t) {
 		mSpawnTimerCounter = 0;
 	}
 
-	if((mGlobalTimerCounter) >= mLastDifficultyTimer +30)
+	if((mGlobalTimerCounter) >= mLastDifficultyTimer + 30)
 	{
-		mSpawnTimerSeconds -= 5;
+		if(mSpawnNumber >= 3)
+		{
+			mSpawnNumber = 0;
+		}
+		mSpawnNumber += 1;
+		if(!isFlip)
+		{
+			mSpawnTimerSeconds -= 5;
+			isFlip = true;
+		}
+		else
+		{
+			mSpawnTimerSeconds += 5;
+		}
 		mLastDifficultyTimer = mGlobalTimerCounter;
 	}
 }
@@ -74,20 +89,24 @@ void ThingSpawner::draw() {
 	}
 }
 
-void ThingSpawner::spawn() {
-	// Generate a random number between 0 and the number of rows
-	int row = std::rand() % mLaneCount;
+void ThingSpawner::spawn() 
+{
+	for(int i = 0; i < mSpawnNumber; i++)
+	{
+		// Generate a random number between 0 and the number of rows
+		int row = std::rand() % mLaneCount;
 
-	// Create the new mob
-	// Mob types to be added later
-	Entity *newZombie = new Entity();
-	newZombie->setTexture(&mZombieTexture);
+		// Create the new mob
+		// Mob types to be added later
+		Entity *newZombie = new Entity();
+		newZombie->setTexture(&mZombieTexture);
 
-	// Set the position to the far right of the screen,  with the
-	// mob sprite aligned with the bottom of the row
-	// it should be spawning on
-	newZombie->getSprite().setPosition(1024, (row * newZombie->getSprite().getGlobalBounds().height));
+		// Set the position to the far right of the screen,  with the
+		// mob sprite aligned with the bottom of the row
+		// it should be spawning on
+		newZombie->getSprite().setPosition(1024, (row * newZombie->getSprite().getGlobalBounds().height));
 
-	// Add the new mob to the list
-	mEntityList.push_back(newZombie);
+		// Add the new mob to the list
+		mEntityList.push_back(newZombie);
+	}
 }

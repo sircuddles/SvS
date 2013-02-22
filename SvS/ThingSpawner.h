@@ -30,6 +30,7 @@ private:
 	float mGlobalTimerCounter;
 	float mLastDifficultyTimer;
 	int mColumnCount, mLaneCount;
+	int mSpawnNumber;
 
 	std::list<Entity*> mEntityList;
 	sf::Texture mZombieTexture;
