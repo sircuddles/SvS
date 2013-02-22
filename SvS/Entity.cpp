@@ -1,6 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity() {}
+Entity::Entity()
+{
+	mHealth = 100;
+	mMaxHealth = 100;
+}
 Entity::~Entity(void) {}
 
 void Entity::update(float t) {

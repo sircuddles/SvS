@@ -10,7 +10,8 @@ public:
 	typedef enum 
 	{ 
 		NONE, 
-		Shooter
+		Shooter,
+		Energy,
 	} PLANT_TYPE;
 
 
@@ -18,6 +19,7 @@ public:
 
 	inline void setSprite(sf::Sprite sprite) { mSprite = sprite; }
 	inline sf::Sprite* getSprite() { return &mSprite; }
+	virtual inline int getEnergyCost() { return 0; }
 
 	virtual void update(float t) {}
 	virtual void draw(sf::RenderWindow &window) {}

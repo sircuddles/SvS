@@ -16,11 +16,11 @@ void ShooterPlant::update(float t)
 	if (mBulletSpawnCounter >= mBulletSpawnDelay) {
 		Bullet* newBullet = new Bullet;
 		newBullet->setPosition(mSprite.getPosition());
-		mBulletList.push_back(newBullet);
+		getBulletList().push_back(newBullet);
 		mBulletSpawnCounter = 0;
 	}
 
-	for (std::list<Bullet*>::iterator iter = mBulletList.begin();  iter != mBulletList.end();  iter++) {
+	for (std::list<Bullet*>::iterator iter = getBulletList().begin();  iter != getBulletList().end();  iter++) {
 		(*iter)->update(t);
 	}
 }
@@ -28,7 +28,7 @@ void ShooterPlant::update(float t)
 void ShooterPlant::draw(sf::RenderWindow &window)
 {
 	window.draw(*getSprite());
-	for (std::list<Bullet*>::iterator iter = mBulletList.begin();  iter != mBulletList.end();  iter++) {
-		window.draw(*(*iter)->getSprite());
+	for (std::list<Bullet*>::iterator iter = getBulletList().begin();  iter != getBulletList().end();  iter++) {
+		window.draw((*iter)->getSprite());
 	}
 }

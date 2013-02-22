@@ -13,10 +13,12 @@ public:
 
 	void update(float t);
 	void draw(sf::RenderWindow &window);
-	std::list<Bullet*> getBulletList() { return mBulletList; }
+	std::list<Bullet*>& getBulletList() { return mBulletList; }
+
+	inline int getEnergyCost() { return 50; }
 
 private:
-	std::list<Bullet*> mBulletList;
 	int mBulletSpawnDelay;
 	float mBulletSpawnCounter;
+	std::list<Bullet*> mBulletList;
 };

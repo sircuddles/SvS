@@ -5,15 +5,14 @@
 
 #include "Board.h"
 
-ThingSpawner::ThingSpawner(Board *board, int columnCount, int laneCount) {
-	mBoard = board;
+ThingSpawner::ThingSpawner(sf::RenderWindow *window, int columnCount, int laneCount) {
+	mWindow = window;
+	mEntityList.clear();
 	// Initialize timer variables
-	mSpawnTimerSeconds = 1;
+	mSpawnTimerSeconds = 10;
 	mSpawnTimerCounter = 0;
-
-	mSpawnTimerText.initialize(board);
-	mSpawnTimerText.setPosition(0, 700);
-	mSpawnTimerText.setString("");
+	mLastDifficultyTimer = 0;
+	mGlobalTimerCounter = 0;
 
 	// Seed number generator
 	std::srand((unsigned int)time(NULL));
@@ -33,6 +32,7 @@ ThingSpawner::~ThingSpawner() {
 
 void ThingSpawner::update(float t) {
 	mSpawnTimerCounter += t;
+	mGlobalTimerCounter += t;
 
 	if (mSpawnTimerCounter >= mSpawnTimerSeconds) {
 		// Find random row
@@ -41,39 +41,36 @@ void ThingSpawner::update(float t) {
 		mSpawnTimerCounter = 0;
 	}
 
-	// Set the displayed text string to the value of mSpawnTimerCounter
-	std::stringstream ss;
-	ss << floor(mSpawnTimerCounter);
-	mSpawnTimerText.setString(ss.str());
-
-	// Run the updates of everything in the list
-	for (std::list<Entity* >::iterator iter = mEntityList.begin();  iter != mEntityList.end();) {
-		Entity *thing = *iter;
-		thing->update(t);
-		
-		// If the right side of the texture of the sprite is off the screen (to the left)
-		//  Delete sprite.
-		if(thing->getSprite().getGlobalBounds().left < mBoard->getBoardRect().getGlobalBounds().left)
-		{
-			// 'Thing' is ready to be deleted.
-			//	 Delete thing...
-			iter = mEntityList.erase(iter);
-		}
-		else
-		{
-			iter++;
-		}
+	if((mGlobalTimerCounter) >= mLastDifficultyTimer +30)
+	{
+		mSpawnTimerSeconds -= 5;
+		mLastDifficultyTimer = mGlobalTimerCounter;
 	}
 }
 
 void ThingSpawner::draw() {
-	// Draw timer text
-	mSpawnTimerText.draw();
-
 	// Draw all entities in the list
 	std::list<Entity* >::iterator iter;
-	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) {
-		mBoard->getGameWindow()->draw((*iter)->getSprite());
+	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) 
+	{
+		Entity* thing = (*iter);
+		if(thing->getHealth() / thing->getMaxHealth() > .75)
+		{
+			(*iter)->getSprite().setColor(sf::Color::Green);
+		}
+		else if(thing->getHealth() / thing->getMaxHealth() > .50)
+		{
+			(*iter)->getSprite().setColor(sf::Color::Yellow);
+		}
+		else if(thing->getHealth() / thing->getMaxHealth() > .25)
+		{
+			(*iter)->getSprite().setColor(sf::Color(255,127,0,255));
+		}
+		else
+		{
+			(*iter)->getSprite().setColor(sf::Color::Red);
+		}
+		mWindow->draw((*iter)->getSprite());
 	}
 }
 

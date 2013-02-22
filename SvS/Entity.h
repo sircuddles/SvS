@@ -2,8 +2,6 @@
 #include <SFML/Graphics.hpp>
 
 class Entity {
-private:
-	sf::Sprite mSprite;
 public:
 	Entity();
 	virtual ~Entity(void);
@@ -12,4 +10,12 @@ public:
 
 	inline void setTexture(sf::Texture* texture) { mSprite.setTexture(*texture); }
 	sf::Sprite& getSprite() { return mSprite; }
+	inline float getHealth() { return  mHealth; }
+	inline float getMaxHealth() { return mMaxHealth; }
+	inline void changeHealth(int health) { mHealth += health; }
+
+private:
+	sf::Sprite mSprite;
+	float mHealth;
+	float mMaxHealth;
 };

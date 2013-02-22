@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <list>
+#include "ThingSpawner.h"
 #include "PlantItem.h"
 #include "ShooterPlant.h"
+#include "EnergyPlant.h"
 
 class Board
 {
@@ -14,7 +16,7 @@ public:
 	
 	void initialize(sf::RenderWindow* gameWindow, PlantItem** plants);
 	void draw();
-	void update(float t);
+	void update(float t, int *currentEnergy);
 
 	inline sf::RenderWindow* getGameWindow() { return mGameWindow; }
 	sf::RectangleShape getBoardRect() { return mBoardOutline; }
@@ -24,6 +26,7 @@ public:
 
 	sf::RectangleShape* getMouseCollision(float x, float y);
 	void addPlacedPlantItem(PlantItem::PLANT_TYPE plantType, sf::RectangleShape* boardCell);
+	void setThingSpawner(ThingSpawner *thingSpawner) { mThingSpawner = thingSpawner; }
 
 private:
 	static Board* mInstance;
@@ -43,4 +46,5 @@ private:
 	int mLeftBoardOffset;
 	sf::Vector2i mPosition;
 	std::list<PlantItem*> mPlacedPlantItems;
+	ThingSpawner* mThingSpawner;
 };
