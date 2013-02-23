@@ -42,10 +42,7 @@ int main()
 		while (gameWindow.pollEvent(gameEvents)) 
 		{
 			if ((gameEvents.type == sf::Event::KeyPressed && gameEvents.key.code == sf::Keyboard::Escape) || (gameEvents.type == sf::Event::Closed))
-<<<<<<< HEAD
-=======
 			{
->>>>>>> 02cf4ded3caa4d8af3b42c830257d0b460a680b4
 				gameWindow.close();
 			}
 
