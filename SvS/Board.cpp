@@ -115,16 +115,13 @@ void Board::update(float t, int *currentEnergy)
 							delete *bulletIter;
 							bulletIter = shooterPlant->getBulletList().erase(bulletIter);
 							hasErased = true;
-
-							if((*entityIter)->getHealth() <= 0)
+			
+							(*entityIter)->changeHealth(-25);
+							
+							if ((*entityIter)->getHealth() <= 0)
 							{
 								delete *entityIter;
-
 								entityIter = mThingSpawner->getEntities().erase(entityIter);
-							}
-							else
-							{
-								(*entityIter)->changeHealth(-25);
 							}
 						}
 						else

@@ -97,7 +97,7 @@ int main()
 		customCursor.update(sf::Vector2f(sf::Mouse::getPosition(gameWindow)));
 		
 		ss.str("");
-		ss << currentEnergy;
+		ss << "Energy: \n" << "  " << currentEnergy;
 		textWriter.setString(ss.str());
 		textWriter.draw();
 
