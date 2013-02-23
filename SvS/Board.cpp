@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Entity.h"
 
 Board* Board::mInstance = NULL;
 
@@ -54,12 +55,90 @@ Board::~Board()
 
 }
 
-void Board::update(float t)
+void Board::update(float t, int *currentEnergy)
 {
+	// Update 'Things'
+	for (std::list<Entity*>::iterator thingIter = mThingSpawner->getEntities().begin();  thingIter != mThingSpawner->getEntities().end();)
+	{
+		Entity *thing = *thingIter;
+		thing->update(t);
+		
+		// If the right side of the texture of the sprite is off the screen (to the left)
+		//  Delete sprite.
+		if(thing->getSprite().getGlobalBounds().left < getBoardRect().getGlobalBounds().left)
+		{
+			// 'Thing' is ready to be deleted.
+			//	 Delete thing...
+			mThingSpawner->getEntities().erase(thingIter++);
+		}
+		else
+		{
+			thingIter++;
+		}
+	}
+
 	// Update placed plants.
 	for (std::list<PlantItem*>::iterator iter = mPlacedPlantItems.begin();  iter != mPlacedPlantItems.end();  iter++) 
 	{
-		(*iter)->update(t);
+		PlantItem* currentItem = (*iter);
+		switch(currentItem->getPlantType())
+		{
+			case PlantItem::PLANT_TYPE::Energy:
+			{
+				((EnergyPlant*)currentItem)->update(t, currentEnergy);
+			}
+			break;
+
+			case PlantItem::PLANT_TYPE::Shooter:
+				currentItem->update(t);
+				ShooterPlant* shooterPlant =(ShooterPlant*)currentItem;
+				for (std::list<Bullet*>::iterator bulletIter = shooterPlant->getBulletList().begin();  bulletIter != shooterPlant->getBulletList().end();)
+				{
+					if((*bulletIter)->getSprite().getPosition().x + (*bulletIter)->getSprite().getGlobalBounds().width > mBoardOutline.getPosition().x + mBoardOutline.getGlobalBounds().width)
+					{
+						bulletIter = shooterPlant->getBulletList().erase(bulletIter);
+		 			}
+					else
+					{
+						++bulletIter;
+					}
+				}
+				std::list<Bullet*>::iterator bulletIter = shooterPlant->getBulletList().begin();
+				while(bulletIter != shooterPlant->getBulletList().end())
+				{
+					bool hasErased = false;
+					std::list<Entity*>::iterator entityIter = mThingSpawner->getEntities().begin();
+					while(entityIter != mThingSpawner->getEntities().end() && bulletIter != shooterPlant->getBulletList().end())
+					{
+						if((*entityIter)->getSprite().getGlobalBounds().intersects((*bulletIter)->getSprite().getGlobalBounds()))
+						{
+							delete *bulletIter;
+							bulletIter = shooterPlant->getBulletList().erase(bulletIter);
+							hasErased = true;
+
+							if((*entityIter)->getHealth() <= 0)
+							{
+								delete *entityIter;
+
+								entityIter = mThingSpawner->getEntities().erase(entityIter);
+							}
+							else
+							{
+								(*entityIter)->changeHealth(-25);
+							}
+						}
+						else
+						{
+							++entityIter;
+						}
+					}
+					if(!hasErased)
+					{
+						++bulletIter;
+					}
+				}
+				break;
+		}
 	}
 }
 
@@ -101,13 +180,25 @@ void Board::addPlacedPlantItem(PlantItem::PLANT_TYPE plantType, sf::RectangleSha
 	switch(plantType)
 	{
 		case PlantItem::PLANT_TYPE::Shooter:
-			printf("Shooter wants to be placed!\n");
+			{
+				printf("Shooter wants to be placed!\n");
 			
-			ShooterPlant* plantItem = new ShooterPlant();
-			mPlacedPlantItems.push_back(plantItem);
+				ShooterPlant* plantItem = new ShooterPlant();
+				mPlacedPlantItems.push_back(plantItem);
 
-			plantItem->getSprite()->setPosition(boardCell->getGlobalBounds().left, boardCell->getGlobalBounds().top);
-			break;			
+				plantItem->getSprite()->setPosition(boardCell->getGlobalBounds().left, boardCell->getGlobalBounds().top);
+			}
+			break;
+		case PlantItem::PLANT_TYPE::Energy:
+			{
+				printf("Energy wants to be placed!\n");
+			
+				EnergyPlant* plantItem = new EnergyPlant();
+				mPlacedPlantItems.push_back(plantItem);
+
+				plantItem->getSprite()->setPosition(boardCell->getGlobalBounds().left, boardCell->getGlobalBounds().top);
+			}
+			break;
 	}
 }
 

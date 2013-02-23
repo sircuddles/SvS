@@ -5,15 +5,15 @@
 
 #include "Board.h"
 
-ThingSpawner::ThingSpawner(Board *board, int columnCount, int laneCount) {
-	mBoard = board;
+ThingSpawner::ThingSpawner(sf::RenderWindow *window, int columnCount, int laneCount) {
+	mWindow = window;
+	mEntityList.clear();
 	// Initialize timer variables
-	mSpawnTimerSeconds = 1;
+	mSpawnTimerSeconds = 15;
 	mSpawnTimerCounter = 0;
-
-	mSpawnTimerText.initialize(board);
-	mSpawnTimerText.setPosition(0, 700);
-	mSpawnTimerText.setString("");
+	mLastDifficultyTimer = 0;
+	mGlobalTimerCounter = 0;
+	mSpawnNumber = 1;
 
 	// Seed number generator
 	std::srand((unsigned int)time(NULL));
@@ -32,7 +32,9 @@ ThingSpawner::~ThingSpawner() {
 }
 
 void ThingSpawner::update(float t) {
+	static bool isFlip = false;
 	mSpawnTimerCounter += t;
+	mGlobalTimerCounter += t;
 
 	if (mSpawnTimerCounter >= mSpawnTimerSeconds) {
 		// Find random row
@@ -41,56 +43,70 @@ void ThingSpawner::update(float t) {
 		mSpawnTimerCounter = 0;
 	}
 
-	// Set the displayed text string to the value of mSpawnTimerCounter
-	std::stringstream ss;
-	ss << floor(mSpawnTimerCounter);
-	mSpawnTimerText.setString(ss.str());
-
-	// Run the updates of everything in the list
-	for (std::list<Entity* >::iterator iter = mEntityList.begin();  iter != mEntityList.end();) {
-		Entity *thing = *iter;
-		thing->update(t);
-		
-		// If the right side of the texture of the sprite is off the screen (to the left)
-		//  Delete sprite.
-		if(thing->getSprite().getGlobalBounds().left < mBoard->getBoardRect().getGlobalBounds().left)
+	if((mGlobalTimerCounter) >= mLastDifficultyTimer + 30)
+	{
+		if(mSpawnNumber >= 3)
 		{
-			// 'Thing' is ready to be deleted.
-			//	 Delete thing...
-			iter = mEntityList.erase(iter);
+			mSpawnNumber = 0;
+		}
+		mSpawnNumber += 1;
+		if(!isFlip)
+		{
+			mSpawnTimerSeconds -= 5;
+			isFlip = true;
 		}
 		else
 		{
-			iter++;
+			mSpawnTimerSeconds += 5;
 		}
+		mLastDifficultyTimer = mGlobalTimerCounter;
 	}
 }
 
 void ThingSpawner::draw() {
-	// Draw timer text
-	mSpawnTimerText.draw();
-
 	// Draw all entities in the list
 	std::list<Entity* >::iterator iter;
-	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) {
-		mBoard->getGameWindow()->draw((*iter)->getSprite());
+	for (iter = mEntityList.begin();  iter != mEntityList.end(); iter++) 
+	{
+		Entity* thing = (*iter);
+		if(thing->getHealth() / thing->getMaxHealth() > .75)
+		{
+			(*iter)->getSprite().setColor(sf::Color::Green);
+		}
+		else if(thing->getHealth() / thing->getMaxHealth() > .50)
+		{
+			(*iter)->getSprite().setColor(sf::Color::Yellow);
+		}
+		else if(thing->getHealth() / thing->getMaxHealth() > .25)
+		{
+			(*iter)->getSprite().setColor(sf::Color(255,127,0,255));
+		}
+		else
+		{
+			(*iter)->getSprite().setColor(sf::Color::Red);
+		}
+		mWindow->draw((*iter)->getSprite());
 	}
 }
 
-void ThingSpawner::spawn() {
-	// Generate a random number between 0 and the number of rows
-	int row = std::rand() % mLaneCount;
+void ThingSpawner::spawn() 
+{
+	for(int i = 0; i < mSpawnNumber; i++)
+	{
+		// Generate a random number between 0 and the number of rows
+		int row = std::rand() % mLaneCount;
 
-	// Create the new mob
-	// Mob types to be added later
-	Entity *newZombie = new Entity();
-	newZombie->setTexture(&mZombieTexture);
+		// Create the new mob
+		// Mob types to be added later
+		Entity *newZombie = new Entity();
+		newZombie->setTexture(&mZombieTexture);
 
-	// Set the position to the far right of the screen,  with the
-	// mob sprite aligned with the bottom of the row
-	// it should be spawning on
-	newZombie->getSprite().setPosition(1024, (row * newZombie->getSprite().getGlobalBounds().height));
+		// Set the position to the far right of the screen,  with the
+		// mob sprite aligned with the bottom of the row
+		// it should be spawning on
+		newZombie->getSprite().setPosition(1024, (row * newZombie->getSprite().getGlobalBounds().height));
 
-	// Add the new mob to the list
-	mEntityList.push_back(newZombie);
+		// Add the new mob to the list
+		mEntityList.push_back(newZombie);
+	}
 }

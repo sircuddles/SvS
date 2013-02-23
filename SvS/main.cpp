@@ -1,11 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <sstream>
 #include "Board.h"
 #include "TextWriter.h"
 #include "ThingSpawner.h"
 #include "Cursor.h"
 #include "ShooterPlant.h"
+#include "EnergyPlant.h"
 
 int main()
 {
@@ -16,13 +18,23 @@ int main()
 	gameWindow.setVerticalSyncEnabled(true);
 	gameWindow.setMouseCursorVisible(false);
 
+	int currentEnergy = 25;
+	TextWriter textWriter;
+
 	// Create board.
 	Board board;
 
+	textWriter.initialize(&board);
+	textWriter.setPosition(10, 10);
+	std::stringstream ss;
+	ss << currentEnergy;
+	textWriter.setString(ss.str());
+
 	// Create plant items available to user.
 	ShooterPlant shooterPlant1;
-	PlantItem plantItem1, plantItem2;
-	PlantItem* plantItems[] = {&shooterPlant1, &plantItem1, &plantItem2};
+	EnergyPlant energyPlant1; 
+	PlantItem plantItem1;
+	PlantItem* plantItems[] = {&shooterPlant1, &energyPlant1, &plantItem1};
 
 	// Initialize board with main grid and plant items.
 	board.initialize(&gameWindow, (PlantItem**)plantItems);
@@ -31,7 +43,8 @@ int main()
 	sf::Event gameEvents;
 	float gameTime = 0;
 
-	ThingSpawner thing(&board, COLUMN_COUNT, LANE_COUNT);
+	ThingSpawner thing(&gameWindow, COLUMN_COUNT, LANE_COUNT);
+	board.setThingSpawner(&thing);
 	Cursor customCursor(&gameWindow);
 
 	PlantItem* activePlantItem = NULL;
@@ -68,20 +81,26 @@ int main()
 
 				if(activePlantItem != NULL && (boardCell = board.getMouseCollision(x,y)) != NULL)
 				{
-					if(!board.isCellActive(boardCell))
+					if(currentEnergy >= activePlantItem->getEnergyCost() && !board.isCellActive(boardCell))
 					{
 						board.setCellActive(boardCell);
 						board.addPlacedPlantItem(activePlantItem->getPlantType(), boardCell);
+						currentEnergy -= activePlantItem->getEnergyCost();
 					}
 				}
 			}
 		}
-
+		
 		thing.update(gameTime);
+		board.update(gameTime, &currentEnergy);
 		// Horrible update that sets the cursor to the mouse position
 		customCursor.update(sf::Vector2f(sf::Mouse::getPosition(gameWindow)));
-		board.update(gameTime);
 		
+		ss.str("");
+		ss << currentEnergy;
+		textWriter.setString(ss.str());
+		textWriter.draw();
+
 		board.draw();
 		thing.draw();
 		customCursor.draw();

@@ -2,7 +2,7 @@
 
 Bullet::Bullet()
 {
-	mXVel = 100;
+	mXVel = 200.0f;
 	mTexture.loadFromFile("assets/plantBullet.png");
 	mSprite.setTexture(mTexture);
 }

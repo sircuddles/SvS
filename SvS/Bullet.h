@@ -9,7 +9,7 @@ public:
 
 	void update(float t);
 	void setPosition(sf::Vector2f position);
-	sf::Sprite* getSprite() { return &mSprite; }
+	sf::Sprite& getSprite() { return mSprite; }
 
 private:
 	sf::Sprite mSprite;
